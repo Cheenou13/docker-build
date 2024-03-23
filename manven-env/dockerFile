@@ -1,0 +1,23 @@
+#
+## This image will use the officail Maven image as the base image
+## This image includes a Java Development Kit (JDK)
+
+FROM maven:latest
+
+#
+## Set the working directory inside the container
+WORKDIR /app
+
+# 
+# Copy the local code to the container
+COPY . .
+
+# Build the application
+# This step will download all the dependencies needed for a Spring Boot application
+RUN mvn clean install
+
+# Expose the port the app runs on
+EXPOSE 8080
+
+# Command to run the application
+CMD ["mvn", "spring-boot:run"]
