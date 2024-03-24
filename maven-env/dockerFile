@@ -1,23 +1,10 @@
-#
-## This image will use the officail Maven image as the base image
-## This image includes a Java Development Kit (JDK)
+# Use maven image with JDK included as the base image, based on Debian
+FROM maven:3.8.4-openjdk-17-slim
 
-FROM maven:latest
-
-#
-## Set the working directory inside the container
-WORKDIR /app
-
-# 
-# Copy the local code to the container
-COPY . .
-
-# Build the application
-# This step will download all the dependencies needed for a Spring Boot application
-RUN mvn clean install
-
-# Expose the port the app runs on
-EXPOSE 8080
-
-# Command to run the application
-CMD ["mvn", "spring-boot:run"]
+# Install Docker CLI
+RUN apt-get update && \
+    apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update && \
+    apt-get install -y docker-ce-cli
